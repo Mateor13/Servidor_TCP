@@ -1,9 +1,7 @@
-package servidor.servicio;
+package udp.servidor.servicio;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
 
 public class Servidor {
     public void servicio() {

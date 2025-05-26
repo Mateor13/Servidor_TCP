@@ -20,7 +20,7 @@ public class Servidor {
         return sdf.format(new Date());
     }
 
-    //Metodo para iniciar el servidor
+    //Metodo para iniciar el udp.servidor
     public static void procesarSolicitud(int puerto) throws Exception {
         ServerSocket servidor = new ServerSocket(puerto);
         System.out.println("Servidor de fechas corriendo...");

@@ -1,6 +1,6 @@
-package servidor.test;
+package udp.servidor.test;
 
-import servidor.servicio.Servidor;
+import udp.servidor.servicio.Servidor;
 
 public class Test {
     public static void main(String[] args) {
