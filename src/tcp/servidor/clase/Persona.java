@@ -2,6 +2,8 @@ package tcp.servidor.clase;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -9,9 +11,10 @@ import java.util.UUID;
 // lo cual es necesario para guardar objetos de esta clase en un archivo.
 public class Persona implements Serializable {
     // Clase Persona que representa a una persona con un ID único y nombre
+    @Serial
     private static final long serialVersionUID = 1L;
-    @Setter @Getter private final String id;
-    @Setter @Getter private final String nombre;
+    @Setter @Getter private String id;
+    @Setter @Getter private String nombre;
     private String entrada = "";
     private String almuerzo = "";
     private String regresoAlmuerzo = "";

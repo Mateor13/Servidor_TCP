@@ -14,4 +14,13 @@ public class Persona {
         this.cargo = cargo;
         this.sueldo = sueldo;
     }
+
+    @Override
+    public String toString() {
+        return  clave + ",\n" +
+                nombre + ",\n" +
+                correo + ",\n" +
+                cargo + ",\n" +
+                sueldo;
+    }
 }

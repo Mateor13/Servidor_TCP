@@ -1,39 +1,71 @@
 package rmi.servidor.clase;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
-
 public class ServidorImpl extends UnicastRemoteObject implements Servidor {
-
-    private static ArrayList<Persona> listPersonas(){
-        ArrayList<Persona> lista = new ArrayList<Persona>();
-        lista.add(new Persona(1, "Mateo", "mateo@epn.edu.ec", "Estudiante", 175));
-        lista.add(new Persona(2, "Lucía", "lucia@epn.edu.ec", "Profesora", 160));
-        lista.add(new Persona(3, "Carlos", "carlos@epn.edu.ec", "Estudiante", 180));
-        lista.add(new Persona(4, "Diana", "diana@epn.edu.ec", "Administrativa", 165));
-        lista.add(new Persona(5, "Andrés", "andres@epn.edu.ec", "Estudiante", 172));
-        lista.add(new Persona(6, "María", "maria@epn.edu.ec", "Profesora", 158));
-        lista.add(new Persona(7, "José", "jose@epn.edu.ec", "Estudiante", 178));
-        lista.add(new Persona(8, "Fernanda", "fernanda@epn.edu.ec", "Investigadora", 170));
+    private static ArrayList<Persona> personas = new ArrayList<>();
+    public ServidorImpl() throws RemoteException {
+        super();
+        personas = getPersonas();
+    }
+    public static ArrayList<Persona> getPersonas() {
+        ArrayList<Persona> lista = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            String ruta = "C:\\Users\\Det-Pc\\IdeaProjects\\Servidor_TCP\\src\\rmi\\servidor\\data\\empleados.db";
+            conn = DriverManager.getConnection("jdbc:sqlite:" + ruta);
+            String sql = "SELECT id, nombre, correo, cargo, sueldo FROM empleado";
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                int clave = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String correo = rs.getString("correo");
+                String cargo = rs.getString("cargo");
+                double sueldo = rs.getDouble("sueldo");
+                Persona p = new Persona(clave, nombre, correo, cargo, sueldo);
+                lista.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (Exception ignored) {
+            }
+            try {
+                if (stmt != null) stmt.close();
+            } catch (Exception ignored) {
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception ignored) {
+            }
+        }
         return lista;
     }
-
-    private static String getPersona(int id) {
-        return "Nombre: "+listPersonas().get(id-1).getNombre()+"\n,"+
-                "Correo: "+listPersonas().get(id-1).getCorreo()+"\n,"+
-                "Cargo: "+listPersonas().get(id-1).getCargo()+"\n,"+
-                "Sueldo: "+listPersonas().get(id-1).getSueldo()+"\n,";
+    private Persona getPersona(int id) {
+        for (Persona p : personas) {
+            if (p.getClave() == id) {
+                return p;
+            }
+        }
+        return null;
     }
-    public ServidorImpl() throws RemoteException{ super();}
-
     @Override
-    public String consultar(int id) throws Exception{
-        if (id<listPersonas().size()+1){
-            return getPersona((id));
-        }else{
+    public String consultar(int id) {
+        Persona persona = getPersona(id);
+        if (persona != null) {
+            return persona.toString();
+        } else {
             return "No existen los datos del empleado";
         }
     }
-
 }
