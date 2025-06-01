@@ -1,12 +1,12 @@
 package rmi.servidor.clase;
-
 import lombok.Getter;
-
-public class Persona {
-    @Getter private int clave;
-    @Getter private String nombre, correo, cargo;
-    @Getter private double sueldo;
-
+import lombok.Setter;
+import java.io.Serializable;
+public class Persona implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Getter @Setter private int clave;
+    @Getter @Setter private String nombre, correo, cargo;
+    @Getter @Setter private double sueldo;
     public Persona(int clave, String nombre, String correo, String cargo, double sueldo) {
         this.clave = clave;
         this.nombre = nombre;
@@ -14,7 +14,6 @@ public class Persona {
         this.cargo = cargo;
         this.sueldo = sueldo;
     }
-
     @Override
     public String toString() {
         return  clave + ",\n" +
