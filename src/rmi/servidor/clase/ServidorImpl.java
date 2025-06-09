@@ -1,12 +1,12 @@
 package rmi.servidor.clase;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-public class ServidorImpl extends UnicastRemoteObject implements Servidor {
+
+public class ServidorImpl implements Servidor {
     private static ArrayList<Persona> personas = new ArrayList<>();
     public ServidorImpl() throws RemoteException {
         super();
@@ -18,8 +18,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
         try {
             if (persona != null) {
                 personas.remove(persona);
-                Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Det-Pc\\IdeaProjects\\Servidor_TCP\\src\\rmi\\servidor\\data\\empleados.db");
-                // Eliminar el empleado con el ID proporcionado
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:/app/db/empleados.db");                // Eliminar el empleado con el ID proporcionado
                 String sql = "DELETE FROM empleado WHERE id = " + id;
                 Statement stmt = conn.createStatement();
                 stmt.executeUpdate(sql);
@@ -48,7 +47,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
                 persona.setCorreo(correo);
                 persona.setCargo(cargo);
                 persona.setSueldo(sueldo);
-                Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Det-Pc\\IdeaProjects\\Servidor_TCP\\src\\rmi\\servidor\\data\\empleados.db");
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:/app/db/empleados.db");
                 String sql = "UPDATE empleado SET nombre = '" + nombre + "', correo = '" + correo + "', cargo = '" + cargo + "', sueldo = " + sueldo + " WHERE id = " + id;
                 Statement stmt = conn.createStatement();
                 stmt.executeUpdate(sql);
@@ -70,7 +69,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
     @Override
     public String agregar(String nombre, String correo, String cargo, double sueldo) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Det-Pc\\IdeaProjects\\Servidor_TCP\\src\\rmi\\servidor\\data\\empleados.db");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:/app/db/empleados.db");
             String sql = "INSERT INTO empleado (nombre, correo, cargo, sueldo) VALUES ('" + nombre + "', '" + correo + "', '" + cargo + "', " + sueldo + ")";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(sql);
@@ -91,9 +90,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            Class.forName("org.sqlite.JDBC");
-            String ruta = "C:\\Users\\Det-Pc\\IdeaProjects\\Servidor_TCP\\src\\rmi\\servidor\\data\\empleados.db";
-            conn = DriverManager.getConnection("jdbc:sqlite:" + ruta);
+            conn = DriverManager.getConnection("jdbc:sqlite:/app/db/empleados.db");
             String sql = "SELECT id, nombre, correo, cargo, sueldo FROM empleado";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
